@@ -1,0 +1,24 @@
+micronaut:
+  application:
+    name: allowance
+  server:
+    port: 8084
+    
+---
+datasources:
+  default:
+    url: ${ALLOWANCE_JDBC_URL}
+    username: ${ALLOWANCE_JDBC_USER}
+    password: ${ALLOWANCE_JDBC_PASSWORD}
+    driverClassName: ${ALLOWANCE_JDBC_DRIVER}
+    
+---
+jpa:
+  default:
+    packages-to-scan:
+      - 'world.deslauriers.domain' 
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
