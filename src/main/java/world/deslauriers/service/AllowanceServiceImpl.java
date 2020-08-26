@@ -44,7 +44,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 		
 		int recordsUpdated = allowanceDao.update(currentBalance, firstname);
 		
-		logger.info(recordsUpdated + " record(s) sussessfully decremented in Allowance table.");
+		logger.info(recordsUpdated + " record(s) sussessfully decremented by 2 in Allowance table.");
 	}
 	
 	@Override

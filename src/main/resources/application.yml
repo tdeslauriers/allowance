@@ -7,7 +7,7 @@ micronaut:
 ---
 datasources:
   default:
-    url: ${ALLOWANCE_JDBC_URL}
+    url: jdbc:mysql:${ALLOWANCE_JDBC_URL}
     username: ${ALLOWANCE_JDBC_USER}
     password: ${ALLOWANCE_JDBC_PASSWORD}
     driverClassName: ${ALLOWANCE_JDBC_DRIVER}
@@ -22,3 +22,4 @@ jpa:
         hbm2ddl:
           auto: update
         show_sql: true
+        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
