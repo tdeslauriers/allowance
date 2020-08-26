@@ -51,7 +51,6 @@ public class AllowanceServiceImpl implements AllowanceService {
 	public Optional<Allowance> findByFirstname(String firstname){
 		
 		//Once auth built, add check to validate requestor authorized
-		
 		Optional<Allowance> allowance = allowanceDao.findByFirstName(firstname);
 		
 		return allowance;
