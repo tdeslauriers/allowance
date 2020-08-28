@@ -23,3 +23,7 @@ jpa:
           auto: update
         show_sql: true
         dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+
+---
+allowance:
+  indexZero: ${ALLOWANCE_APP_FIRSTNAME_ONE}

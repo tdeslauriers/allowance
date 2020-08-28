@@ -33,10 +33,8 @@ public class AllowanceController {
 				.findByFirstname(firstname)
 				.orElse(null);
 	}
-	
-	// remove once front end created
-	// replace with encapsulated @Body @Valid AllowanceUpdateCommand request
-	@Put("/{firstname}")
+
+	@Put("penalty/{firstname}")
 	public HttpResponse decrementBy2(@Body @Valid AllowanceUpdateCommand command) {
 		
 		allowanceSerivice.decrementBy2(command.getFirstname());
