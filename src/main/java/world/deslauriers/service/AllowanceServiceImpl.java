@@ -1,5 +1,7 @@
 package world.deslauriers.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -54,5 +56,15 @@ public class AllowanceServiceImpl implements AllowanceService {
 		Optional<Allowance> allowance = allowanceDao.findByFirstName(firstname);
 		
 		return allowance;
+	}
+	
+	@Override
+	public List<Allowance> findAll(){
+		
+		//Once auth built, add check to validate requestor authorized
+//		List<Allowance> all = new ArrayList<Allowance>(
+//				allowanceDao.findAll());
+		
+		return new ArrayList<Allowance>(allowanceDao.findAll());
 	}
 }

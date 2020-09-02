@@ -3,6 +3,13 @@ micronaut:
     name: allowance
   server:
     port: 8084
+    cors:
+      enabled:
+        true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:5000
     
 ---
 datasources:

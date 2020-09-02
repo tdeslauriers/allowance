@@ -1,6 +1,7 @@
 package world.deslauriers.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -26,6 +27,12 @@ public class AllowanceController {
 		this.allowanceSerivice = allowanceSerivice;
 	}
 	
+	@Get("/all")
+	public List<Allowance> showAllAllowances(){
+		
+		return allowanceSerivice.findAll();
+	}
+	
 	@Get("/{firstname}")
 	public Allowance showAllowance(String firstname) {
 		
@@ -34,7 +41,7 @@ public class AllowanceController {
 				.orElse(null);
 	}
 
-	@Put("penalty/{firstname}")
+	@Put("/penalty/{firstname}")
 	public HttpResponse decrementBy2(@Body @Valid AllowanceUpdateCommand command) {
 		
 		allowanceSerivice.decrementBy2(command.getFirstname());
