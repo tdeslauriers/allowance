@@ -2,14 +2,14 @@ micronaut:
   application:
     name: allowance
   server:
-    port: 8084
+    port: ${ALLOWANCE_APP_PORT}
     cors:
       enabled:
         true
       configurations:
         web:
           allowedOrigins:
-            - http://localhost:5000
+            - ${ALLOWANCE_APP_ALLOWED_ORIGIN}
     
 ---
 datasources:
