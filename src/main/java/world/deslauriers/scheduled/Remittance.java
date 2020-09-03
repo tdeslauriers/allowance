@@ -1,4 +1,4 @@
-package world.deslauriers.task;
+package world.deslauriers.scheduled;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
