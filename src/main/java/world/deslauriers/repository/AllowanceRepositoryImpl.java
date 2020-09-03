@@ -20,7 +20,6 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	private final EntityManager em;
 
 	public AllowanceRepositoryImpl(EntityManager em) {
-		super();
 		this.em = em;
 	}
 	
