@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class TaskType implements Serializable {
 	private static final long serialVersionUID = 8655835783845056181L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "name")
@@ -52,7 +52,7 @@ public class TaskType implements Serializable {
 	Set<Allowance> allowances = new HashSet<>();
 	
 	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
 
 	
