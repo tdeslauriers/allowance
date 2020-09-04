@@ -10,5 +10,5 @@ public interface AllowanceRepository {
 	Optional<Allowance> findByFirstName(String firstname);
 	List<Allowance> findAll();
 	int update(Double amount, String firstname);
-	void save(Allowance allowance);
+	Optional<Allowance> save(Allowance allowance);
 }

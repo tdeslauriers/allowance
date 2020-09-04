@@ -64,8 +64,21 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	
 	@Override
 	@Transactional
-	public void save(Allowance allowance) {
+	public Optional<Allowance> save(Allowance allowance) {
 		
-		em.persist(allowance);
+		try {
+			
+			em.getTransaction().begin();
+			em.persist(allowance);
+			em.getTransaction().commit();
+			
+			return Optional.of(allowance);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return Optional.empty();
 	}
 }

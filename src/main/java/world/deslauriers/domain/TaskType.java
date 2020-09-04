@@ -4,14 +4,31 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tasktype")
 public class TaskType implements Serializable {
@@ -25,44 +42,18 @@ public class TaskType implements Serializable {
 	@Column(name = "name")
 	private String name;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@JoinTable(
+			name = "allowance_tasktype",
+			joinColumns = {@JoinColumn(name = "task_type_id")},
+			inverseJoinColumns = {@JoinColumn(name = "allowance_id")}
+			)
+	@JsonBackReference
+	Set<Allowance> allowances = new HashSet<>();
+	
+	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
+	@JsonManagedReference
 	private Set<Task> task = new HashSet<>();
 
-	public TaskType() {
-	}
-
-	public TaskType(Long id, String name, Set<Task> task) {
-		this.id = id;
-		this.name = name;
-		this.task = task;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<Task> getTask() {
-		return task;
-	}
-
-	public void setTask(Set<Task> task) {
-		this.task = task;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
+	
 }

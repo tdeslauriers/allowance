@@ -11,6 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "task")
 public class Task implements Serializable {
@@ -31,73 +42,11 @@ public class Task implements Serializable {
 	private Boolean quality;
 	
 	@ManyToOne(targetEntity = TaskType.class)
+	@JsonBackReference
 	private TaskType tasktype;
 	
 	@ManyToOne(targetEntity = Allowance.class)
+	@JsonBackReference
 	private Allowance allowance;
 
-	public Task() {
-	}
-
-	public Task(Long id, LocalDate date, Boolean complete, Boolean quality, TaskType tasktype, Allowance allowance) {
-		this.id = id;
-		this.date = date;
-		this.complete = complete;
-		this.quality = quality;
-		this.tasktype = tasktype;
-		this.allowance = allowance;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
-	public Boolean getComplete() {
-		return complete;
-	}
-
-	public void setComplete(Boolean complete) {
-		this.complete = complete;
-	}
-
-	public Boolean getQuality() {
-		return quality;
-	}
-
-	public void setQuality(Boolean quality) {
-		this.quality = quality;
-	}
-
-	public TaskType getTasktype() {
-		return tasktype;
-	}
-
-	public void setTasktype(TaskType tasktype) {
-		this.tasktype = tasktype;
-	}
-
-	public Allowance getAllowance() {
-		return allowance;
-	}
-
-	public void setAllowance(Allowance allowance) {
-		this.allowance = allowance;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
 }
