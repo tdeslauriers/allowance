@@ -14,8 +14,8 @@ public interface TaskRepository {
 	Optional<Task> findById(Long id);
 	Optional<Task> findByName(String name);
 	List<Task> findByInterval(LocalDate start, LocalDate end);
-	int updateCompleteById(@NotNull Boolean completeness, @NotNull Long id);
-	int updateQualityById(@NotNull Boolean quality, @NotNull Long id);
 	Optional<Task> save(Task task);
+	int updateIsCompleteById(@NotNull Boolean isComplete, @NotNull Long id);
+	int updateIsQualityById(@NotNull Boolean isQuality, @NotNull Long id);
 
 }

@@ -38,8 +38,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 	
 	@Override
 	@ReadOnly
-	public
-	Optional<Task> findById(Long id){
+	public Optional<Task> findById(Long id){
 		
 		String hql = "SELECT t FROM Task t WHERE t.id = :id";
 		Task task = em
@@ -84,26 +83,26 @@ public class TaskRepositoryImpl implements TaskRepository {
 	
 	@Override
 	@Transactional
-	public int updateCompleteById(@NotNull Boolean complete, @NotNull Long id) {
+	public int updateIsCompleteById(@NotNull Boolean isComplete, @NotNull Long id) {
 		
-		String hql = "UPDATE Task t ET t.complete = :complete WHERE t.id = :id";
+		String hql = "UPDATE Task t SET t.isComplete = :isComplete WHERE t.id = :id";
 		
 		return em
 				.createQuery(hql)
-				.setParameter("complete", complete)
+				.setParameter("isComplete", isComplete)
 				.setParameter("id", id)
 				.executeUpdate();
 	}
 	
 	@Override
 	@Transactional
-	public int updateQualityById(@NotNull Boolean quality, @NotNull Long id) {
+	public int updateIsQualityById(@NotNull Boolean isQuality, @NotNull Long id) {
 		
-		String hql = "UPDATE Task t SET t.quality = :quality WHERE t.id =:id";
+		String hql = "UPDATE Task t SET t.isQuality = :isQuality WHERE t.id =:id";
 		
 		return em
 				.createQuery(hql)
-				.setParameter("quality", quality)
+				.setParameter("isQuality", isQuality)
 				.setParameter("id", id)
 				.executeUpdate();
 	}
@@ -112,18 +111,20 @@ public class TaskRepositoryImpl implements TaskRepository {
 	@Transactional
 	public Optional<Task> save(Task task) {
 
-		try {
-			
-			em.getTransaction().begin();
-			em.persist(task);
-			em.getTransaction().commit();
-			
-			return Optional.of(task);
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-		
-		return Optional.empty();
+//		try {
+//			
+//			em.getTransaction().begin();
+//			em.persist(task);
+//			em.getTransaction().commit();
+//			
+//			return Optional.of(task);
+//		} catch (Exception e) {
+//			
+//			e.printStackTrace();
+//		}
+//		
+//		return Optional.empty();
+		em.persist(task);
+		return Optional.of(task);
 	}
 }

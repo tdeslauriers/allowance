@@ -35,11 +35,11 @@ public class Task implements Serializable {
 	@Column(name = "date")
 	private LocalDate date;
 	
-	@Column(name = "complete")
-	private Boolean complete;
+	@Column(name = "is_complete")
+	private Boolean isComplete;
 	
-	@Column(name = "quality")
-	private Boolean quality;
+	@Column(name = "is_quality")
+	private Boolean isQuality;
 	
 	@ManyToOne(targetEntity = TaskType.class)
 	@JsonBackReference

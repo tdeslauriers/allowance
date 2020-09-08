@@ -34,3 +34,4 @@ jpa:
 ---
 allowance:
   indexZero: ${ALLOWANCE_APP_FIRSTNAME_ONE}
+  

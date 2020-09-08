@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,7 +53,7 @@ public class TaskType implements Serializable {
 	Set<Allowance> allowances = new HashSet<>();
 	
 	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
-	@JsonIgnore
+	@JsonManagedReference
 	private Set<Task> task = new HashSet<>();
 
 	
