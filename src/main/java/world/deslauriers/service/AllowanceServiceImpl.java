@@ -10,9 +10,11 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.repository.AllowanceRepository;
 
+@AllArgsConstructor
 @Singleton
 public class AllowanceServiceImpl implements AllowanceService {
 	
@@ -20,10 +22,6 @@ public class AllowanceServiceImpl implements AllowanceService {
 	
 	@Inject
 	private AllowanceRepository allowanceDao;
-	
-	public AllowanceServiceImpl(AllowanceRepository allowanceDao) {
-		this.allowanceDao = allowanceDao;
-	}
 
 	@Override
 	public void weeklyRemittance() {
