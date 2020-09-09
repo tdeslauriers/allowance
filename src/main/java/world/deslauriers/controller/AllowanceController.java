@@ -13,19 +13,17 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.service.AllowanceService;
 import world.deslauriers.validation.AllowanceUpdateCommand;
 
+@AllArgsConstructor
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/api/v1/allowance")
 public class AllowanceController {
 	
 	protected final AllowanceService allowanceSerivice;
-
-	public AllowanceController(AllowanceService allowanceSerivice) {
-		this.allowanceSerivice = allowanceSerivice;
-	}
 	
 	@Get("/all")
 	public List<Allowance> showAllAllowances(){
@@ -42,7 +40,7 @@ public class AllowanceController {
 	}
 
 	@Put("/penalty/{firstname}")
-	public HttpResponse decrementBy2(@Body @Valid AllowanceUpdateCommand command) {
+	public HttpResponse<?> decrementBy2(@Body @Valid AllowanceUpdateCommand command) {
 		
 		allowanceSerivice.decrementBy2(command.getFirstname());
 		

@@ -26,15 +26,19 @@ public class AllowanceServiceImpl implements AllowanceService {
 	}
 
 	@Override
-	public void weeklyRemittance(String firstname) {
+	public void weeklyRemittance() {
 		
-		Optional<Allowance> allowance = allowanceDao.findByFirstName(firstname);
-		Double currentBalance = allowance.get().getAmount();
-		currentBalance += allowance.get().getAge();
-		
-		int recordsUpdated = allowanceDao.update(currentBalance, firstname);
-		
-		logger.info(recordsUpdated + " record(s) had weekly remittance applied in Allowance table.");
+		List<Allowance> allowances = new ArrayList<>(allowanceDao.findAll());
+		for (Allowance a : allowances) {
+			
+			Double currentBalance = a.getAmount();
+			currentBalance += a.getAge();
+			
+			int recordsUpdated = allowanceDao.update(currentBalance, a.getFirstname());
+			
+			logger.info("Allowance table: " + recordsUpdated + " record(s) updated.  " + 
+			a.getFirstname() + "'s balance incremented by " + a.getAge() + " dollars.");
+		}
 	}
 	
 	@Override
@@ -61,10 +65,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 	@Override
 	public List<Allowance> findAll(){
 		
-		//Once auth built, add check to validate requestor authorized
-//		List<Allowance> all = new ArrayList<Allowance>(
-//				allowanceDao.findAll());
-		
+		//Once auth built, add check to validate requestor authorized		
 		return new ArrayList<Allowance>(allowanceDao.findAll());
 	}
 }

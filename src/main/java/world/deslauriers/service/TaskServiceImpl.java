@@ -1,8 +1,6 @@
 package world.deslauriers.service;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
 
@@ -13,11 +11,13 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.Task;
 import world.deslauriers.domain.TaskType;
 import world.deslauriers.repository.TaskRepository;
 
+@AllArgsConstructor
 @Singleton
 public class TaskServiceImpl implements TaskService {
 	
@@ -28,11 +28,6 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Inject 
 	private AllowanceService allowanceService;
-	
-	public TaskServiceImpl(TaskRepository taskDao, AllowanceService allowanceService) {
-		this.taskDao = taskDao;
-		this.allowanceService = allowanceService;
-	}
 
 	@Override
 	public void updateIsCompleteById(@NotNull Boolean isComplete, @NotNull Long id) {

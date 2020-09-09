@@ -111,19 +111,6 @@ public class TaskRepositoryImpl implements TaskRepository {
 	@Transactional
 	public Optional<Task> save(Task task) {
 
-//		try {
-//			
-//			em.getTransaction().begin();
-//			em.persist(task);
-//			em.getTransaction().commit();
-//			
-//			return Optional.of(task);
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-//		return Optional.empty();
 		em.persist(task);
 		return Optional.of(task);
 	}

@@ -7,5 +7,5 @@ import world.deslauriers.domain.TaskType;
 public interface TaskTypeService {
 
 	List<TaskType> findAll();
-
+	void save(TaskType taskType);
 }
