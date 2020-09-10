@@ -44,32 +44,29 @@ public class AllowanceControllerTest {
 	@Test
 	public void testCrudOperations() {
 		
-		//put quality
-		QualityCompleteUpdateCommand cmd = new QualityCompleteUpdateCommand();
-		cmd.setTaskId(Long.valueOf(73));
-		cmd.setUpdateStatus(false);
-		HttpRequest request = HttpRequest.PUT("/api/v1/task/quality", cmd);
-        HttpResponse response = client.toBlocking().exchange(request);  
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-        
-        //put complete
-		request = HttpRequest.PUT("/api/v1/task/complete", cmd);
-        response = client.toBlocking().exchange(request); 
-        
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+//		//put quality
+//		QualityCompleteUpdateCommand cmd = new QualityCompleteUpdateCommand();
+//		cmd.setTaskId(Long.valueOf(73));
+//		cmd.setUpdateStatus(false);
+//		HttpRequest request = HttpRequest.PUT("/api/v1/task/quality", cmd);
+//        HttpResponse response = client.toBlocking().exchange(request);  
+//
+//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+//        
+//        //put complete
+//		request = HttpRequest.PUT("/api/v1/task/complete", cmd);
+//        response = client.toBlocking().exchange(request); 
+//        
+//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
 		
 		
 		//findall
 		// Jaskson XML encoding error on JsonBackReferences
-		request = HttpRequest.GET("/api/v1/allowance/all");
+		HttpRequest request = HttpRequest.GET("/api/v1/allowance/all");
 		List<Allowance> allowances = 
 				client.toBlocking().retrieve(request, Argument.of(List.class, Allowance.class));
 	
 		assertEquals(1, allowances.size());
-		
-		
-		
 		
 	}
 	
