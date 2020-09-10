@@ -42,11 +42,11 @@ public class Task implements Serializable {
 	private Boolean isQuality;
 	
 	@ManyToOne(targetEntity = TaskType.class)
-	@JsonBackReference
+	@JsonBackReference(value = "tasktype-task")
 	private TaskType tasktype;
 	
 	@ManyToOne(targetEntity = Allowance.class)
-	@JsonBackReference
+	@JsonBackReference(value = "allowance-task")
 	private Allowance allowance;
 
 }

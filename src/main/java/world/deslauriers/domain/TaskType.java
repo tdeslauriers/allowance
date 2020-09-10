@@ -48,11 +48,11 @@ public class TaskType implements Serializable {
 			joinColumns = {@JoinColumn(name = "task_type_id")},
 			inverseJoinColumns = {@JoinColumn(name = "allowance_id")}
 			)
-	@JsonBackReference
+	@JsonBackReference(value = "allowance-tasktype")
 	Set<Allowance> allowances = new HashSet<>();
 	
 	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonManagedReference(value = "tasktype-task")
 	private Set<Task> task = new HashSet<>();
 
 	

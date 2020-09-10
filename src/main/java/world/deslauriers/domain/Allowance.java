@@ -50,10 +50,11 @@ public class Allowance implements Serializable {
 	private Integer age;
 	
 	@ManyToMany(mappedBy = "allowances", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JsonManagedReference
+	@JsonManagedReference(value = "allowance-tasktype")
 	private Set<TaskType> tasktype;
 	
 	@OneToMany(mappedBy = "allowance", fetch = FetchType.EAGER)
+//	@JsonManagedReference(value = "allowance-task")
 	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
 
