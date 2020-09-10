@@ -42,23 +42,7 @@ public class AllowanceControllerTest {
 	}
 	
 	@Test
-	public void testCrudOperations() {
-		
-//		//put quality
-//		QualityCompleteUpdateCommand cmd = new QualityCompleteUpdateCommand();
-//		cmd.setTaskId(Long.valueOf(73));
-//		cmd.setUpdateStatus(false);
-//		HttpRequest request = HttpRequest.PUT("/api/v1/task/quality", cmd);
-//        HttpResponse response = client.toBlocking().exchange(request);  
-//
-//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-//        
-//        //put complete
-//		request = HttpRequest.PUT("/api/v1/task/complete", cmd);
-//        response = client.toBlocking().exchange(request); 
-//        
-//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-		
+	public void testCrudOperations() {		
 		
 		//findall
 		// Jaskson XML encoding error on JsonBackReferences

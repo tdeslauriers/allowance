@@ -1,4 +1,4 @@
-package world.deslauriers;
+package world.deslauriers.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
