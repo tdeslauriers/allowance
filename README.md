@@ -1,4 +1,6 @@
 ## Allowance 
 
-*Simple Micronaut CRUD service to track allowances and perform basic lookups/updates*
+*Micronaut CRUD service to track allowances and perform lookups/updates*
+
+* Includes scheduled jobs to update balances and create daily tasks
 

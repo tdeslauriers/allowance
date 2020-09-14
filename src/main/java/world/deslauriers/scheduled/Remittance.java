@@ -18,13 +18,13 @@ public class Remittance {
 	@Inject
 	private final TaskService taskService;
 
-	@Scheduled(cron = "0 0 5 ? * 1")
+	@Scheduled(cron = "0 0 6 ? * 1")
 	void updateAllowance() {
 		
 		allowanceService.weeklyRemittance();
 	}
 	
-	@Scheduled(cron = "0 0 6 ? * *")
+	@Scheduled(cron = "0 0 5 ? * *")
 	void dailyTasks() {
 		
 		taskService.createDailyTasks();

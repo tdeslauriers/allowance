@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -53,6 +54,7 @@ public class TaskType implements Serializable {
 	
 	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
 	@JsonManagedReference(value = "tasktype-task")
+	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
 
 	

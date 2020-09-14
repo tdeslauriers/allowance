@@ -53,7 +53,7 @@ public class Allowance implements Serializable {
 	@JsonManagedReference(value = "allowance-tasktype")
 	private Set<TaskType> tasktype;
 	
-	@OneToMany(mappedBy = "allowance", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "allowance", fetch = FetchType.LAZY)
 //	@JsonManagedReference(value = "allowance-task")
 	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
