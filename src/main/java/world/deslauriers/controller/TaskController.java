@@ -1,6 +1,7 @@
 package world.deslauriers.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -8,11 +9,14 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import lombok.AllArgsConstructor;
+import world.deslauriers.domain.dto.DailyTasksDto;
 import world.deslauriers.domain.dto.QualityCompleteUpdateCommand;
+import world.deslauriers.service.AllowanceService;
 import world.deslauriers.service.TaskService;
 
 @AllArgsConstructor
@@ -21,6 +25,14 @@ import world.deslauriers.service.TaskService;
 public class TaskController {
 	
 	protected final TaskService taskService;
+	
+	protected final AllowanceService allowanceSerivce;
+	
+	@Get("/daily")
+	public List<DailyTasksDto> showDailyTasks(){
+		
+		return allowanceSerivce.findDaily();
+	}
 	
 	@Put("/quality")
 	public HttpResponse<?> updateIsQuality(@Body @Valid QualityCompleteUpdateCommand cmd){

@@ -1,5 +1,6 @@
 package world.deslauriers.repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import world.deslauriers.domain.Allowance;
+import world.deslauriers.domain.dto.DailyTasksDto;
 
 @Singleton
 public class AllowanceRepositoryImpl implements AllowanceRepository {
@@ -45,6 +47,48 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 				em.createQuery(hql, Allowance.class).getResultList());
 		
 		return allowances;
+	}
+	
+	@Override
+	@ReadOnly
+	public List<DailyTasksDto> findDaily(){
+		
+		String hql = "SELECT "
+				+ "t.id, " 
+				+ "a.firstname, "
+				+ "a.lastname, "
+				+ "tt.name, "
+				+ "t.date, "
+				+ "t.isComplete, "
+				+ "t.isQuality "
+				+ "FROM Allowance a "
+				+ "LEFT JOIN a.tasktype tt "
+				+ "LEFT JOIN  tt.task t "
+				+ "WHERE t.date = :today";
+		
+		List<Object[]> lookup = 
+				new ArrayList<>(em
+					.createQuery(hql, Object[].class)
+					.setParameter("today", LocalDate.now())
+					.getResultList());
+		
+		List<DailyTasksDto> dailyTasks = new ArrayList<>(lookup.size());
+		
+		for (Object[] record : lookup) {
+			
+			DailyTasksDto task = new DailyTasksDto();
+			task.setTaskId((Long) record[0]);
+			task.setFirstname((String) record[1]);
+			task.setLastname((String) record[2]);
+			task.setTaskTypeName((String) record[3]);
+			task.setDate((LocalDate) record[4]);
+			task.setIsComplete((Boolean) record[5]);
+			task.setIsQuality((Boolean) record[6]);
+			
+			dailyTasks.add(task);
+		}
+		
+		return dailyTasks;
 	}
 	
 	@Override

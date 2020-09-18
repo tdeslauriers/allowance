@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import world.deslauriers.domain.Allowance;
+import world.deslauriers.domain.dto.DailyTasksDto;
 
 public interface AllowanceRepository {
 
@@ -11,4 +12,5 @@ public interface AllowanceRepository {
 	List<Allowance> findAll();
 	int update(Double amount, String firstname);
 	Optional<Allowance> save(Allowance allowance);
+	List<DailyTasksDto> findDaily();
 }

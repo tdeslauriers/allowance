@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
+import world.deslauriers.domain.dto.DailyTasksDto;
 import world.deslauriers.repository.AllowanceRepository;
 
 @AllArgsConstructor
@@ -65,5 +66,12 @@ public class AllowanceServiceImpl implements AllowanceService {
 		
 		//Once auth built, add check to validate requestor authorized		
 		return new ArrayList<Allowance>(allowanceDao.findAll());
+	}
+	
+	@Override
+	public List<DailyTasksDto> findDaily(){
+		
+		//Once auth built, add check to validate requestor authorized		
+		return new ArrayList<DailyTasksDto>(allowanceDao.findDaily());
 	}
 }
