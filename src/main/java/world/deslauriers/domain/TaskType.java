@@ -43,6 +43,9 @@ public class TaskType implements Serializable {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name = "cadence")
+	private String cadence;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(
 			name = "allowance_tasktype",

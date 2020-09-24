@@ -20,7 +20,7 @@ public class TaskTypeServiceImpl implements TaskTypeService {
 	@Override
 	public List<TaskType> findAll(){
 		
-		return new ArrayList<TaskType>(taskTypeDao.findAll());
+		return new ArrayList<>(taskTypeDao.findAll());
 	}
 	
 	@Override

@@ -14,7 +14,9 @@ import javax.validation.constraints.Size;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import world.deslauriers.domain.Allowance;
+import world.deslauriers.domain.Cadence;
 import world.deslauriers.domain.dto.DailyTasksDto;
+import world.deslauriers.domain.dto.TaskTypeCadenceDto;
 
 @Singleton
 public class AllowanceRepositoryImpl implements AllowanceRepository {
@@ -42,9 +44,24 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	@ReadOnly
 	public List<Allowance> findAll(){
 		
-		String hql = "SELECT a FROM Allowance a";
-		List<Allowance> allowances = new ArrayList<Allowance>(
-				em.createQuery(hql, Allowance.class).getResultList());
+		String hql = "SELECT a.id, a.amount, a.firstname, a.lastname, a.age FROM Allowance a";
+		List<Object[]> lookup = new ArrayList<>(
+				em.createQuery(hql, Object[].class).getResultList());
+		
+		List<Allowance> allowances = new ArrayList<>(lookup.size());
+		
+		for (Object[] record: lookup) {
+			
+			Allowance a = new Allowance();
+			a.setId((Long) record[0]);
+			a.setAmount((Double) record[1]);
+			a.setFirstname((String) record[2]);
+			a.setLastname((String) record[3]);
+			a.setAge((Integer) record[4]);
+			
+			allowances.add(a);
+			
+		}
 		
 		return allowances;
 	}
@@ -89,6 +106,36 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 		}
 		
 		return dailyTasks;
+	}
+	
+	@Override
+	@ReadOnly
+	public List<TaskTypeCadenceDto> findAllowanceDailyTaskTypes(){
+		
+		String hql = "SELECT"
+				+ " a.id,"
+				+ " a.firstname,"
+				+ " tt.name "
+				+ "FROM Allowance a LEFT JOIN a.tasktype tt "
+				+ "WHERE tt.cadence = :cadence";
+		List<Object[]> lookup = new ArrayList<>(
+				em.createQuery(hql, Object[].class)
+				.setParameter("cadence", Cadence.DAILY.getCadence())
+				.getResultList());
+		
+		List<TaskTypeCadenceDto> daily = new ArrayList<>(lookup.size());
+		
+		for (Object[] record: lookup) {
+			
+			TaskTypeCadenceDto t = new TaskTypeCadenceDto();
+			t.setId((Long) record[0]);
+			t.setFirstname((String) record[1]);
+			t.setTaskTypeName((String) record[2]);
+			
+			daily.add(t);
+		}
+		
+		return daily;
 	}
 	
 	@Override

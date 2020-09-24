@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.dto.DailyTasksDto;
+import world.deslauriers.domain.dto.TaskTypeCadenceDto;
 
 public interface AllowanceService {
 
@@ -13,5 +14,6 @@ public interface AllowanceService {
 	List<Allowance> findAll();
 	void weeklyRemittance();
 	List<DailyTasksDto> findDaily();
+	List<TaskTypeCadenceDto> findDailyTaskTypes();
 
 }
