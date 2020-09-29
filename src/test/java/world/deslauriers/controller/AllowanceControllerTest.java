@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.annotation.MicronautTest;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.dto.QualityCompleteUpdateCommand;
+import world.deslauriers.repository.AllowanceRepository;
+import world.deslauriers.service.AllowanceService;
 
 @MicronautTest
 public class AllowanceControllerTest {
@@ -28,6 +31,9 @@ public class AllowanceControllerTest {
 	@Inject
 	@Client("/")
 	HttpClient client;
+	
+	@Inject
+	private AllowanceRepository adao;
 	
 	@Test
 	public void supplyInvalidNameTriggersValidationFailure() {
@@ -53,6 +59,4 @@ public class AllowanceControllerTest {
 		assertEquals(1, allowances.size());
 		
 	}
-	
-	
 }

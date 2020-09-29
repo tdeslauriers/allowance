@@ -8,15 +8,12 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import world.deslauriers.domain.Allowance;
-import world.deslauriers.domain.Cadence;
 import world.deslauriers.domain.dto.DailyTasksDto;
-import world.deslauriers.domain.dto.TaskTypeCadenceDto;
+import world.deslauriers.domain.dto.TaskIntervalDto;
 
 @Singleton
 public class AllowanceRepositoryImpl implements AllowanceRepository {
@@ -29,12 +26,13 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	
 	@Override
 	@ReadOnly
-	public Optional<Allowance> findByFirstName(String firstname){
+	public Optional<Allowance> findById(Long id){
 		
-		String hql = "SELECT a FROM Allowance a WHERE a.firstname = :firstname";
-		Allowance allowance = em
+		String hql = "SELECT a FROM Allowance a WHERE a.id = :id";
+		Allowance allowance = 
+				em
 				.createQuery(hql, Allowance.class)
-				.setParameter("firstname", firstname)
+				.setParameter("id", id)
 				.getSingleResult();
 		
 		return Optional.ofNullable(allowance);
@@ -44,110 +42,38 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	@ReadOnly
 	public List<Allowance> findAll(){
 		
-		String hql = "SELECT a.id, a.amount, a.firstname, a.lastname, a.age FROM Allowance a";
-		List<Object[]> lookup = new ArrayList<>(
-				em.createQuery(hql, Object[].class).getResultList());
-		
-		List<Allowance> allowances = new ArrayList<>(lookup.size());
-		
-		for (Object[] record: lookup) {
-			
-			Allowance a = new Allowance();
-			a.setId((Long) record[0]);
-			a.setAmount((Double) record[1]);
-			a.setFirstname((String) record[2]);
-			a.setLastname((String) record[3]);
-			a.setAge((Integer) record[4]);
-			
-			allowances.add(a);
-			
-		}
-		
+		String hql = "SELECT new world.deslauriers.domain.Allowance("
+				+ "a.id, a.balance, a.firstname, a.lastname, a.age)"
+				+ " FROM Allowance a";
+		List<Allowance> allowances = new ArrayList<>(
+				em.createQuery(hql, Allowance.class)
+				.getResultList());
+
 		return allowances;
 	}
 	
 	@Override
 	@ReadOnly
-	public List<DailyTasksDto> findDaily(){
+	public List<Allowance> findAllTableData(){
 		
-		String hql = "SELECT "
-				+ "t.id, " 
-				+ "a.firstname, "
-				+ "a.lastname, "
-				+ "tt.name, "
-				+ "t.date, "
-				+ "t.isComplete, "
-				+ "t.isQuality "
-				+ "FROM Allowance a "
-				+ "LEFT JOIN a.tasktype tt "
-				+ "LEFT JOIN  tt.task t "
-				+ "WHERE t.date = :today";
+		String hql = "FROM Allowance";
+		List<Allowance> allowances = 
+				em.createQuery(hql, Allowance.class)
+				.getResultList();
 		
-		List<Object[]> lookup = 
-				new ArrayList<>(em
-					.createQuery(hql, Object[].class)
-					.setParameter("today", LocalDate.now())
-					.getResultList());
-		
-		List<DailyTasksDto> dailyTasks = new ArrayList<>(lookup.size());
-		
-		for (Object[] record : lookup) {
-			
-			DailyTasksDto task = new DailyTasksDto();
-			task.setTaskId((Long) record[0]);
-			task.setFirstname((String) record[1]);
-			task.setLastname((String) record[2]);
-			task.setTaskTypeName((String) record[3]);
-			task.setDate((LocalDate) record[4]);
-			task.setIsComplete((Boolean) record[5]);
-			task.setIsQuality((Boolean) record[6]);
-			
-			dailyTasks.add(task);
-		}
-		
-		return dailyTasks;
-	}
-	
-	@Override
-	@ReadOnly
-	public List<TaskTypeCadenceDto> findAllowanceDailyTaskTypes(){
-		
-		String hql = "SELECT"
-				+ " a.id,"
-				+ " a.firstname,"
-				+ " tt.name "
-				+ "FROM Allowance a LEFT JOIN a.tasktype tt "
-				+ "WHERE tt.cadence = :cadence";
-		List<Object[]> lookup = new ArrayList<>(
-				em.createQuery(hql, Object[].class)
-				.setParameter("cadence", Cadence.DAILY.getCadence())
-				.getResultList());
-		
-		List<TaskTypeCadenceDto> daily = new ArrayList<>(lookup.size());
-		
-		for (Object[] record: lookup) {
-			
-			TaskTypeCadenceDto t = new TaskTypeCadenceDto();
-			t.setId((Long) record[0]);
-			t.setFirstname((String) record[1]);
-			t.setTaskTypeName((String) record[2]);
-			
-			daily.add(t);
-		}
-		
-		return daily;
+		return allowances;
 	}
 	
 	@Override
 	@Transactional
-	public int update(
-			@NotNull Double amount, @NotBlank @Size(max = 10, min = 2)String firstname) {
+	public int updateBalance(
+			@NotNull Double balance, @NotNull Long id) {
 		
-		String hql = "UPDATE Allowance a SET a.amount = :amount WHERE a.firstname = :firstname";
+		String hql = "UPDATE Allowance a SET a.balance = :balance WHERE a.id = :id";
 		int update = em
 				.createQuery(hql)
-				.setParameter("amount", amount)
-				.setParameter("firstname", firstname)
+				.setParameter("balance", balance)
+				.setParameter("id", id)
 				.executeUpdate();
 	
 		return update;
@@ -155,10 +81,59 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	
 	@Override
 	@Transactional
-	public Optional<Allowance> save(Allowance allowance) {
+	public void save(Allowance allowance) {
 		
 		em.persist(allowance);
-		return Optional.ofNullable(allowance);
 	}
 	
+	@Override
+	@ReadOnly
+	public List<DailyTasksDto> findDailyTasks(){
+		
+		String hql = "SELECT new world.deslauriers.domain.dto.DailyTasksDto("
+		+ "t.id, " 
+		+ "a.firstname, "
+		+ "a.lastname, "
+		+ "tt.name, "
+		+ "t.date, "
+		+ "t.isComplete, "
+		+ "t.isQuality) "
+		+ "FROM Allowance a "
+		+ "LEFT JOIN a.tasktype tt "
+		+ "LEFT JOIN  tt.task t "
+		+ "WHERE t.date = :today";
+		List<DailyTasksDto> daily = 
+				em.createQuery(hql, DailyTasksDto.class)
+				.setParameter("today", LocalDate.now())
+				.getResultList();
+				
+		return daily;
+	}
+	
+	@Override
+	@ReadOnly
+	public List<TaskIntervalDto> findTasksByInterval(LocalDate start, LocalDate end){
+		
+		String hql = "SELECT new world.deslauriers.domain.dto.TaskIntervalDto("
+		+ "t.id, " 
+		+ "t.date, "
+		+ "tt.name, "
+		+ "t.isComplete, "
+		+ "t.isQuality, "
+		+ "tt.id, "
+		+ "a.id) "
+		+ "FROM Allowance a "
+		+ "LEFT JOIN a.tasktype tt "
+		+ "LEFT JOIN tt.task t "
+		+ "WHERE t.date BETWEEN :start AND :end "
+		+ "ORDER BY t.date ASC";
+		List<TaskIntervalDto> tasks = 
+				em.createQuery(hql, TaskIntervalDto.class)
+				.setParameter("start", start)
+				.setParameter("end", end)
+				.getResultList();
+				
+		return tasks;
+	}
 }
+

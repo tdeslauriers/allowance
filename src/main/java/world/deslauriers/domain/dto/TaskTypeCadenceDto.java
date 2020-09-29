@@ -13,7 +13,6 @@ public class TaskTypeCadenceDto implements Serializable {
 
 	private static final long serialVersionUID = -2101510331161224322L;
 	
-	private Long id;
-	private String firstname;
-	private String taskTypeName;
+	private Long tasktypeId;
+	private Long allowanceId;
 }

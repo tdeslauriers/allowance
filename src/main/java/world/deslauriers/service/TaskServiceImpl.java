@@ -1,10 +1,8 @@
 package world.deslauriers.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
+import world.deslauriers.domain.Cadence;
 import world.deslauriers.domain.Task;
 import world.deslauriers.domain.TaskType;
 import world.deslauriers.domain.dto.TaskTypeCadenceDto;
@@ -34,6 +33,12 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Inject 
 	private TaskTypeService taskTypeService;
+	
+	@Override
+	public List<Task> findAll(){
+		
+		return taskDao.findAll();
+	}
 
 	@Override
 	public void updateIsCompleteById(@NotNull Boolean isComplete, @NotNull Long id) {
@@ -54,40 +59,24 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void createDailyTasks() {
 		
-		// because the lists of allowances and tasktypes are small
-		// more efficient to call db for whole lists 
-		// vs db record-lookup one at a time in task creation loop
-		List<Allowance> allowances = allowanceService.findAll();
-		List<TaskType> tts = taskTypeService.findAll();
-		List<TaskTypeCadenceDto> daily = allowanceService.findDailyTaskTypes();
-
-		for(TaskTypeCadenceDto t: daily) {
+		List<TaskTypeCadenceDto> daily= 
+				taskTypeService.findByCadence(Cadence.DAILY.getCadence());
+		
+		for(TaskTypeCadenceDto ttc: daily) {
 			
-			Task task = new Task();
+			Task t = new Task();
+			t.setDate(LocalDate.now());
+			t.setIsComplete(false);
+			t.setIsQuality(true);
 			
-			TaskType tt = tts.stream()
-					.filter(tasktype -> t.getTaskTypeName().equals(tasktype.getName()))
-					.findAny().orElse(null);
+			Optional<TaskType> tt = taskTypeService.findById(ttc.getTasktypeId());
+			t.setTasktype(tt.get());
 			
-			Allowance a = allowances.stream()
-					.filter(allowance -> t.getFirstname().equals(allowance.getFirstname()))
-					.findAny().orElse(null);
+			Optional<Allowance> a = allowanceService.findById(ttc.getAllowanceId());
+			t.setAllowance(a.get());
 			
-			task.setIsComplete(false);
-			task.setIsQuality(true);
-			task.setDate(LocalDate.now());
-			task.setAllowance(a);
-			task.setTasktype(tt);
-			
-			taskDao.save(task);
+			taskDao.save(t);
 		}
-		
-	}
-	
-	@Override
-	public List<Task> findWeeklyTasks(LocalDate start, LocalDate end){
-		
-		return new ArrayList<Task>(taskDao.findByInterval(start, end));
 	}
 
 }

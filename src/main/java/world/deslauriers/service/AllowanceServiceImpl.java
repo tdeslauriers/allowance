@@ -13,9 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
-import world.deslauriers.domain.Task;
 import world.deslauriers.domain.dto.DailyTasksDto;
-import world.deslauriers.domain.dto.TaskTypeCadenceDto;
+import world.deslauriers.domain.dto.TaskIntervalDto;
 import world.deslauriers.repository.AllowanceRepository;
 
 @AllArgsConstructor
@@ -29,75 +28,50 @@ public class AllowanceServiceImpl implements AllowanceService {
 
 	@Override
 	public void weeklyRemittance() {
-//		
-//		List<Allowance> allowances = new ArrayList<>(allowanceDao.findAll());
-//		
-//		LocalDate start = LocalDate.now();
-//		LocalDate end = start.minusDays(7);
-//		
-//
-//		List<Task> weeklyTasks = new ArrayList<>(taskService.findWeeklyTasks(start, end));
-//		
-//		for (Allowance a : allowances) {
-//			
-//			List<Task> aTasks = new ArrayList<>();
-//			for(Task t: weeklyTasks) {
-//				
-//				if(t.getAllowance().getFirstname().equals(a.getFirstname())) {
-//					
-//					aTasks.add(t);
-//				}
-//			}
-//			
-//			Double totalPossible = Double.valueOf(a.getAge());
-//			Double possiblePerTask = totalPossible/aTasks.size();
-//			for (Task t: aTasks) {
-//				
-//				if(t.getIsComplete() && !t.getIsQuality()) {
-//					
-//					totalPossible -= (possiblePerTask/2);
-//					logger.info(t.getDate() + ": " + t.getTasktype().getName()
-//							+ " was not completed up to par - Subtracting " 
-//							+ possiblePerTask/2 + " from possible " + totalPossible);
-//				}
-//				
-//				if(!t.getIsComplete()) {
-//					
-//					totalPossible -= possiblePerTask;
-//					logger.info(t.getDate() + ": " + t.getTasktype().getName()
-//							+ " was not completed - Subtracting " 
-//							+ possiblePerTask + " from possible " + totalPossible);
-//				}
-//			}
-//			
-//			Double currentBalance = a.getAmount() + totalPossible;
-//			
-//			int recordsUpdated = allowanceDao.update(currentBalance, a.getFirstname());
-//			
-//			logger.info("Allowance table: " + recordsUpdated + " record(s) updated.  " + 
-//			a.getFirstname() + "'s balance incremented by " + totalPossible + " dollars.");
-//		}
-	}
-	
-	@Override
-	public void decrementBy2(String firstname) {
 		
-		Optional<Allowance> allowance = allowanceDao.findByFirstName(firstname);
-		Double currentBalance = allowance.get().getAmount();
-		currentBalance -= 2;
+		List<Allowance> allowances = new ArrayList<>(
+				allowanceDao.findAll());
 		
-		int recordsUpdated = allowanceDao.update(currentBalance, firstname);
-		
-		logger.info(recordsUpdated + " record(s) sussessfully decremented by 2 in Allowance table.");
-	}
-	
-	@Override
-	public Optional<Allowance> findByFirstname(String firstname){
-		
-		//Once auth built, add check to validate requestor authorized
-		Optional<Allowance> allowance = allowanceDao.findByFirstName(firstname);
-		
-		return allowance;
+		LocalDate end = LocalDate.now().minusDays(1);
+		LocalDate start = end.minusDays(8);
+		List<TaskIntervalDto> lastWeekTasks = new ArrayList<>(
+				allowanceDao.findTasksByInterval(start, end));
+		for (TaskIntervalDto t: lastWeekTasks) {
+			System.out.println(t.toString());
+		}
+		for(Allowance a: allowances) {
+			
+			Double totalPossible = Double.valueOf(a.getAge());
+			Double totalPerTask = Double.valueOf(a.getAge())/lastWeekTasks.size();
+			
+			for(TaskIntervalDto task: lastWeekTasks) {
+				
+				if (task.getAllowanceId() == a.getId()) {
+					
+					if(!task.getIsComplete()) {
+						
+						totalPossible -= totalPerTask;
+						
+						logger.info(task.getDate() + ": "
+								+ task.getTaskTypeName() + " was not completed - "
+								+ "subtracting " + totalPerTask + " from total possible.");
+					}
+					
+					if(task.getIsComplete() && !task.getIsQuality()) {
+						
+						totalPossible -= (totalPerTask/2);
+						logger.info(task.getDate() + ": "
+								+ task.getTaskTypeName() + " was not completed to expectation - "
+								+ "subtracting " + totalPerTask/2 + " from total possible.");
+					}
+				}
+			}
+			
+
+			int newBal = allowanceDao.updateBalance(a.getBalance() + totalPossible, a.getId());
+			logger.info(newBal + " record updated: " + a.getFirstname() + "'s earned " + totalPossible
+					+ " - balance is now: " + allowanceDao.findById(a.getId()).get().getBalance());
+		}
 	}
 	
 	@Override
@@ -111,12 +85,13 @@ public class AllowanceServiceImpl implements AllowanceService {
 	public List<DailyTasksDto> findDaily(){
 		
 		//Once auth built, add check to validate requestor authorized		
-		return new ArrayList<DailyTasksDto>(allowanceDao.findDaily());
+		return new ArrayList<DailyTasksDto>(allowanceDao.findDailyTasks());
 	}
 	
 	@Override
-	public List<TaskTypeCadenceDto> findDailyTaskTypes(){
+	public Optional<Allowance> findById(Long id){
 		
-		return new ArrayList<>(allowanceDao.findAllowanceDailyTaskTypes());
+		return allowanceDao.findById(id);
 	}
+
 }

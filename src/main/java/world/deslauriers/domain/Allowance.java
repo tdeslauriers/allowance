@@ -1,7 +1,6 @@
 package world.deslauriers.domain;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -37,8 +36,8 @@ public class Allowance implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "allowance_amount")
-	private Double amount;
+	@Column(name = "balance")
+	private Double balance;
 	
 	@Column(name = "firstname")
 	private String firstname;
@@ -49,13 +48,20 @@ public class Allowance implements Serializable {
 	@Column(name = "age")
 	private Integer age;
 	
-	@ManyToMany(mappedBy = "allowances", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToMany(mappedBy = "allowances", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JsonManagedReference(value = "allowance-tasktype")
 	private Set<TaskType> tasktype;
 	
-	@OneToMany(mappedBy = "allowance", fetch = FetchType.LAZY)
-//	@JsonManagedReference(value = "allowance-task")
+	@OneToMany(mappedBy = "allowance", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JsonManagedReference(value = "allowance-task")
 	@JsonIgnore
-	private Set<Task> task = new HashSet<>();
+	private Set<Task> task;
 
+	public Allowance(Long id, Double balance, String firstname, String lastname, Integer age) {
+		this.id = id;
+		this.balance = balance;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.age = age;
+	}
 }

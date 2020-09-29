@@ -46,19 +46,23 @@ public class TaskType implements Serializable {
 	@Column(name = "cadence")
 	private String cadence;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(
 			name = "allowance_tasktype",
-			joinColumns = {@JoinColumn(name = "task_type_id")},
+			joinColumns = {@JoinColumn(name = "tasktype_id")},
 			inverseJoinColumns = {@JoinColumn(name = "allowance_id")}
 			)
 	@JsonBackReference(value = "allowance-tasktype")
 	Set<Allowance> allowances = new HashSet<>();
 	
-	@OneToMany(mappedBy = "tasktype", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "tasktype", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JsonManagedReference(value = "tasktype-task")
 	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
 
-	
+	public TaskType(Long id, String name, String cadence) {
+		this.id = id;
+		this.name = name;
+		this.cadence = cadence;
+	}
 }

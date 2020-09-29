@@ -54,6 +54,13 @@ mainClassName = "world.deslauriers.Application"
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
+    testLogging{
+    	
+        // Make sure output from
+        // standard out or error is shown
+        // in Gradle output.
+        events 'standard_out', 'standard_error'
+    }
 }
 
 java {

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,12 +42,18 @@ public class Task implements Serializable {
 	@Column(name = "is_quality")
 	private Boolean isQuality;
 	
-	@ManyToOne(targetEntity = TaskType.class)
+	@ManyToOne(targetEntity = TaskType.class, fetch = FetchType.LAZY)
 	@JsonBackReference(value = "tasktype-task")
 	private TaskType tasktype;
 	
-	@ManyToOne(targetEntity = Allowance.class)
+	@ManyToOne(targetEntity = Allowance.class, fetch = FetchType.LAZY)
 	@JsonBackReference(value = "allowance-task")
 	private Allowance allowance;
 
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", date=" + date + ", isComplete=" + isComplete + ", isQuality=" + isQuality + "]";
+	}
+	
+	
 }
