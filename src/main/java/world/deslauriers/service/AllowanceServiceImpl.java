@@ -67,7 +67,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 				}
 			}
 			
-
+			totalPossible = round(totalPossible, 2);
 			int newBal = allowanceDao.updateBalance(a.getBalance() + totalPossible, a.getId());
 			logger.info(newBal + " record updated: " + a.getFirstname() + "'s earned " + totalPossible
 					+ " - balance is now: " + allowanceDao.findById(a.getId()).get().getBalance());
@@ -94,4 +94,9 @@ public class AllowanceServiceImpl implements AllowanceService {
 		return allowanceDao.findById(id);
 	}
 
+	private static double round(double value, int precision) {
+		
+		int scale = (int) Math.pow(10, precision);
+		return (double) Math.round(value * scale) / scale;
+	}
 }
