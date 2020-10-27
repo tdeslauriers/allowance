@@ -36,9 +36,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 		LocalDate start = end.minusDays(8);
 		List<TaskIntervalDto> lastWeekTasks = new ArrayList<>(
 				allowanceDao.findTasksByInterval(start, end));
-		for (TaskIntervalDto t: lastWeekTasks) {
-			System.out.println(t.toString());
-		}
+
 		for(Allowance a: allowances) {
 			
 			Double totalPossible = Double.valueOf(a.getAge());

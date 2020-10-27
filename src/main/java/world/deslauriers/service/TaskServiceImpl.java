@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
 		
 		int taskIsComplete = taskDao.updateIsCompleteById(isComplete, id);
 		
-		logger.info(taskIsComplete + "task(s) had their isComplete status updated.");
+		logger.info(taskIsComplete + " task(s) had their isComplete status updated.");
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
 		
 		int taskIsQuality = taskDao.updateIsQualityById(isQuality, id);
 		
-		logger.info(taskIsQuality + "task(s) had their isQuality status updated.");
+		logger.info(taskIsQuality + " task(s) had their isQuality status updated.");
 	}
 	
 	@Override
