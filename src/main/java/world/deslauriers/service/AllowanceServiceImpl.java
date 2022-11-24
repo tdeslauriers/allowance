@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.dto.DailyTasksDto;
 import world.deslauriers.domain.dto.TaskIntervalDto;
 import world.deslauriers.repository.AllowanceRepository;
 
-@AllArgsConstructor
 @Singleton
 public class AllowanceServiceImpl implements AllowanceService {
 	
@@ -38,28 +35,29 @@ public class AllowanceServiceImpl implements AllowanceService {
 				allowanceDao.findTasksByInterval(start, end));
 
 		for(Allowance a: allowances) {
-			
-			Double totalPossible = Double.valueOf(a.getAge());
-			Double totalPerTask = Double.valueOf(a.getAge())/lastWeekTasks.size();
+
+			Double age = 11d; // CALL USER SERVICE
+			Double totalPossible = Double.valueOf(age);
+			Double totalPerTask = Double.valueOf(age)/lastWeekTasks.size();
 			
 			for(TaskIntervalDto task: lastWeekTasks) {
 				
-				if (task.getAllowanceId() == a.getId()) {
+				if (task.allowanceId() == a.getId()) {
 					
-					if(!task.getIsComplete()) {
+					if(!task.isComplete()) {
 						
 						totalPossible -= totalPerTask;
 						
-						logger.info(task.getDate() + ": "
-								+ task.getTaskTypeName() + " was not completed - "
+						logger.info(task.date() + ": "
+								+ task.taskTypeName() + " was not completed - "
 								+ "subtracting " + totalPerTask + " from total possible.");
 					}
 					
-					if(task.getIsComplete() && !task.getIsQuality()) {
+					if(task.isComplete() && !task.isQuality()) {
 						
 						totalPossible -= (totalPerTask/2);
-						logger.info(task.getDate() + ": "
-								+ task.getTaskTypeName() + " was not completed to expectation - "
+						logger.info(task.date() + ": "
+								+ task.taskTypeName() + " was not completed to expectation - "
 								+ "subtracting " + totalPerTask/2 + " from total possible.");
 					}
 				}
@@ -67,8 +65,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 			
 			totalPossible = round(totalPossible, 2);
 			int newBal = allowanceDao.updateBalance(a.getBalance() + totalPossible, a.getId());
-			logger.info(newBal + " record updated: " + a.getFirstname() + "'s earned " + totalPossible
-					+ " - balance is now: " + allowanceDao.findById(a.getId()).get().getBalance());
+
 		}
 	}
 	

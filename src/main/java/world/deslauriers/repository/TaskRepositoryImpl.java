@@ -3,12 +3,12 @@ package world.deslauriers.repository;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import io.micronaut.transaction.annotation.ReadOnly;
+import jakarta.inject.Singleton;
 import world.deslauriers.domain.Task;
 
 

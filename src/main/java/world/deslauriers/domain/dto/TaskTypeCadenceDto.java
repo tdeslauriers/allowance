@@ -1,18 +1,12 @@
 package world.deslauriers.domain.dto;
 
-import java.io.Serializable;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.serde.annotation.Serdeable;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TaskTypeCadenceDto implements Serializable {
-
-	private static final long serialVersionUID = -2101510331161224322L;
+@Serdeable
+public record TaskTypeCadenceDto (
 	
-	private Long tasktypeId;
-	private Long allowanceId;
-}
+	@NonNull Long tasktypeId,
+	@NonNull Long allowanceId
+){}

@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import io.micronaut.transaction.annotation.ReadOnly;
+import jakarta.inject.Singleton;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.dto.DailyTasksDto;
 import world.deslauriers.domain.dto.TaskIntervalDto;
@@ -42,14 +42,17 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	@ReadOnly
 	public List<Allowance> findAll(){
 		
-		String hql = "SELECT new world.deslauriers.domain.Allowance("
-				+ "a.id, a.balance, a.firstname, a.lastname, a.age)"
-				+ " FROM Allowance a";
-		List<Allowance> allowances = new ArrayList<>(
-				em.createQuery(hql, Allowance.class)
-				.getResultList());
-
-		return allowances;
+		String hql = """
+    			SELECT new world.deslauriers.domain.Allowance(
+					a.id, 
+					a.balance, 
+					a.userId, 
+					a.age)
+				FROM Allowance a""";
+		return new ArrayList<>(
+				em
+					.createQuery(hql, Allowance.class)
+					.getResultList());
 	}
 	
 	@Override
@@ -57,11 +60,10 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	public List<Allowance> findAllTableData(){
 		
 		String hql = "FROM Allowance";
-		List<Allowance> allowances = 
-				em.createQuery(hql, Allowance.class)
+
+		return em
+				.createQuery(hql, Allowance.class)
 				.getResultList();
-		
-		return allowances;
 	}
 	
 	@Override
@@ -70,13 +72,12 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 			@NotNull Double balance, @NotNull Long id) {
 		
 		String hql = "UPDATE Allowance a SET a.balance = :balance WHERE a.id = :id";
-		int update = em
+
+		return em
 				.createQuery(hql)
 				.setParameter("balance", balance)
 				.setParameter("id", id)
 				.executeUpdate();
-	
-		return update;
 	}
 	
 	@Override
@@ -90,50 +91,49 @@ public class AllowanceRepositoryImpl implements AllowanceRepository {
 	@ReadOnly
 	public List<DailyTasksDto> findDailyTasks(){
 		
-		String hql = "SELECT new world.deslauriers.domain.dto.DailyTasksDto("
-		+ "t.id, " 
-		+ "a.firstname, "
-		+ "a.lastname, "
-		+ "tt.name, "
-		+ "t.date, "
-		+ "t.isComplete, "
-		+ "t.isQuality) "
-		+ "FROM Allowance a "
-		+ "LEFT JOIN a.tasktype tt "
-		+ "LEFT JOIN  tt.task t "
-		+ "WHERE t.date = :today";
-		List<DailyTasksDto> daily = 
-				em.createQuery(hql, DailyTasksDto.class)
+		String hql = """
+  		SELECT new world.deslauriers.domain.dto.DailyTasksDto(
+			t.id,  
+			a.userId, 
+			tt.name, 
+			t.date, 
+			t.isComplete, 
+			t.isQuality) 
+		FROM Allowance a 
+			LEFT JOIN a.tasktype tt 
+			LEFT JOIN  tt.task t 
+		WHERE t.date = :today""";
+
+		return em
+				.createQuery(hql, DailyTasksDto.class)
 				.setParameter("today", LocalDate.now())
 				.getResultList();
-				
-		return daily;
 	}
 	
 	@Override
 	@ReadOnly
 	public List<TaskIntervalDto> findTasksByInterval(LocalDate start, LocalDate end){
 		
-		String hql = "SELECT new world.deslauriers.domain.dto.TaskIntervalDto("
-		+ "t.id, " 
-		+ "t.date, "
-		+ "tt.name, "
-		+ "t.isComplete, "
-		+ "t.isQuality, "
-		+ "tt.id, "
-		+ "a.id) "
-		+ "FROM Allowance a "
-		+ "LEFT JOIN a.tasktype tt "
-		+ "LEFT JOIN tt.task t "
-		+ "WHERE t.date BETWEEN :start AND :end "
-		+ "ORDER BY t.date ASC";
-		List<TaskIntervalDto> tasks = 
-				em.createQuery(hql, TaskIntervalDto.class)
+		String hql = """
+  		SELECT new world.deslauriers.domain.dto.TaskIntervalDto(
+			t.id, 
+			t.date,
+			tt.name,
+			t.isComplete,
+			t.isQuality,
+			tt.id,
+			a.id)
+		FROM Allowance a
+			LEFT JOIN a.tasktype tt
+			LEFT JOIN tt.task t
+		WHERE t.date BETWEEN :start AND :end
+		ORDER BY t.date ASC """;
+
+		return em
+				.createQuery(hql, TaskIntervalDto.class)
 				.setParameter("start", start)
 				.setParameter("end", end)
 				.getResultList();
-				
-		return tasks;
 	}
 }
 

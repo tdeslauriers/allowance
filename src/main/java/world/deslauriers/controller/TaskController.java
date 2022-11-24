@@ -1,10 +1,5 @@
 package world.deslauriers.controller;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -13,21 +8,28 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import lombok.AllArgsConstructor;
 import world.deslauriers.domain.dto.DailyTasksDto;
 import world.deslauriers.domain.dto.QualityCompleteUpdateCommand;
 import world.deslauriers.service.AllowanceService;
 import world.deslauriers.service.TaskService;
 
-@AllArgsConstructor
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
+
 @ExecuteOn(TaskExecutors.IO)
-@Controller("/api/v1/task")
+@Controller("/tasks")
 public class TaskController {
 	
 	protected final TaskService taskService;
 	
 	protected final AllowanceService allowanceSerivce;
-	
+
+	public TaskController(TaskService taskService, AllowanceService allowanceSerivce) {
+		this.taskService = taskService;
+		this.allowanceSerivce = allowanceSerivce;
+	}
+
 	@Get("/daily")
 	public List<DailyTasksDto> showDailyTasks(){
 		
@@ -37,25 +39,25 @@ public class TaskController {
 	@Put("/quality")
 	public HttpResponse<?> updateIsQuality(@Body @Valid QualityCompleteUpdateCommand cmd){
 		
-		taskService.updateIsQualityById(cmd.getUpdateStatus(), cmd.getTaskId());
+		taskService.updateIsQualityById(cmd.updateStatus(), cmd.taskId());
 		
 		return HttpResponse
 				.noContent()
-				.header(HttpHeaders.LOCATION, location(cmd.getTaskId()).getPath());
+				.header(HttpHeaders.LOCATION, location(cmd.taskId()).getPath());
 	}
 	
 	@Put("/complete")
 	public HttpResponse<?> updateIsComplete(@Body @Valid QualityCompleteUpdateCommand cmd){
 		
-		taskService.updateIsCompleteById(cmd.getUpdateStatus(), cmd.getTaskId());
+		taskService.updateIsCompleteById(cmd.updateStatus(), cmd.taskId());
 		
 		return HttpResponse
 				.noContent()
-				.header(HttpHeaders.LOCATION, location(cmd.getTaskId()).getPath());
+				.header(HttpHeaders.LOCATION, location(cmd.taskId()).getPath());
 	}
 	
 	protected URI location(Long taskId) {
 		
-		return URI.create("/api/v1/task/" + taskId);
+		return URI.create("/tasks/" + taskId);
 	}
 }

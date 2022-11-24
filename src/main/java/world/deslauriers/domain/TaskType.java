@@ -1,41 +1,17 @@
 package world.deslauriers.domain;
 
-import java.io.Serializable;
+import io.micronaut.serde.annotation.Serdeable;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Serdeable
 @Entity
 @Table(name = "tasktype")
-public class TaskType implements Serializable {
+public class TaskType  {
 
-	private static final long serialVersionUID = 8655835783845056181L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -52,17 +28,77 @@ public class TaskType implements Serializable {
 			joinColumns = {@JoinColumn(name = "tasktype_id")},
 			inverseJoinColumns = {@JoinColumn(name = "allowance_id")}
 			)
-	@JsonBackReference(value = "allowance-tasktype")
 	Set<Allowance> allowances = new HashSet<>();
 	
 	@OneToMany(mappedBy = "tasktype", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JsonManagedReference(value = "tasktype-task")
-	@JsonIgnore
 	private Set<Task> task = new HashSet<>();
+
+	public TaskType() {
+	}
 
 	public TaskType(Long id, String name, String cadence) {
 		this.id = id;
 		this.name = name;
 		this.cadence = cadence;
 	}
+
+	public TaskType(Long id, String name, String cadence, Set<Allowance> allowances, Set<Task> task) {
+		this.id = id;
+		this.name = name;
+		this.cadence = cadence;
+		this.allowances = allowances;
+		this.task = task;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCadence() {
+		return cadence;
+	}
+
+	public void setCadence(String cadence) {
+		this.cadence = cadence;
+	}
+
+	public Set<Allowance> getAllowances() {
+		return allowances;
+	}
+
+	public void setAllowances(Set<Allowance> allowances) {
+		this.allowances = allowances;
+	}
+
+	public Set<Task> getTask() {
+		return task;
+	}
+
+	public void setTask(Set<Task> task) {
+		this.task = task;
+	}
+
+	@Override
+	public String toString() {
+		return "TaskType{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", cadence='" + cadence + '\'' +
+				", allowances=" + allowances +
+				", task=" + task +
+				'}';
+	}
 }
+

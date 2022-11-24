@@ -1,23 +1,26 @@
 package world.deslauriers.controller;
 
-import java.net.URI;
-import java.util.List;
-
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.service.AllowanceService;
 
-@AllArgsConstructor
+import java.net.URI;
+import java.util.List;
+
+
 @ExecuteOn(TaskExecutors.IO)
-@Controller("/api/v1/allowance")
+@Controller("/allowance")
 public class AllowanceController {
 	
 	protected final AllowanceService allowanceSerivice;
-	
+
+	public AllowanceController(AllowanceService allowanceSerivice) {
+		this.allowanceSerivice = allowanceSerivice;
+	}
+
 	@Get("/all")
 	public List<Allowance> showAllAllowances(){
 		
@@ -26,6 +29,6 @@ public class AllowanceController {
 	
 	protected URI location(String firstname) {
 		
-		return URI.create("/api/v1/allowance/" + firstname);
+		return URI.create("/allowance/" + firstname);
 	}
 }

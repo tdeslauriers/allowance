@@ -1,18 +1,16 @@
 package world.deslauriers.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import lombok.AllArgsConstructor;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import world.deslauriers.domain.TaskType;
 import world.deslauriers.domain.dto.TaskTypeCadenceDto;
 import world.deslauriers.repository.TaskTypeRepository;
 
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+
 @Singleton
 public class TaskTypeServiceImpl implements TaskTypeService {
 	

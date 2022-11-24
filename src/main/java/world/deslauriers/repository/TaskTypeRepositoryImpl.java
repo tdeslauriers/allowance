@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import io.micronaut.transaction.annotation.ReadOnly;
+import jakarta.inject.Singleton;
 import world.deslauriers.domain.TaskType;
 import world.deslauriers.domain.dto.TaskTypeCadenceDto;
 
@@ -27,10 +27,11 @@ public class TaskTypeRepositoryImpl implements TaskTypeRepository {
 		
 		String hql = "SELECT new world.deslauriers.domain.TaskType("
 				+ "tt.id, tt.name, tt.cadence) FROM TaskType tt";
-		List<TaskType> tt = new ArrayList<>(
-				em.createQuery(hql, TaskType.class).getResultList());
-		
-		return tt;
+
+		return new ArrayList<>(
+				em
+				.createQuery(hql, TaskType.class)
+				.getResultList());
 	}
 	
 	@Override
@@ -43,12 +44,12 @@ public class TaskTypeRepositoryImpl implements TaskTypeRepository {
 				+ " FROM TaskType tt"
 				+ "	LEFT JOIN tt.allowances a"
 				+ "	WHERE tt.cadence = :cadence";
-		List<TaskTypeCadenceDto> tasktypes = new ArrayList<>(
-				em.createQuery(hql, TaskTypeCadenceDto.class)
+
+		return new ArrayList<>(
+				em
+				.createQuery(hql, TaskTypeCadenceDto.class)
 				.setParameter("cadence", cadence)
 				.getResultList());
-		
-		return tasktypes;
 	}
 	
 	@Override

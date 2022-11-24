@@ -1,36 +1,14 @@
 package world.deslauriers.domain;
 
-import java.io.Serializable;
+import io.micronaut.serde.annotation.Serdeable;
+
+import javax.persistence.*;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Serdeable
 @Entity
 @Table(name = "allowance")
-public class Allowance implements Serializable {
-
-	private static final long serialVersionUID = 377230080671867060L;
+public class Allowance {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,29 +17,80 @@ public class Allowance implements Serializable {
 	@Column(name = "balance")
 	private Double balance;
 	
-	@Column(name = "firstname")
-	private String firstname;
-	
-	@Column(name = "lastname")
-	private String lastname;
-	
-	@Column(name = "age")
-	private Integer age;
+	@Column(name = "user_id")
+	private Long userId;
 	
 	@ManyToMany(mappedBy = "allowances", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JsonManagedReference(value = "allowance-tasktype")
 	private Set<TaskType> tasktype;
 	
-	@OneToMany(mappedBy = "allowance", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JsonManagedReference(value = "allowance-task")
-	@JsonIgnore
-	private Set<Task> task;
+	@ManyToMany(mappedBy = "allowances", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private Set<Task> tasks;
 
-	public Allowance(Long id, Double balance, String firstname, String lastname, Integer age) {
+	public Allowance() {
+	}
+
+	public Allowance(Long id, Double balance, Long userId) {
 		this.id = id;
 		this.balance = balance;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.age = age;
+		this.userId = userId;
+	}
+
+	public Allowance(Long id, Double balance, Long userId, Set<TaskType> tasktype, Set<Task> tasks) {
+		this.id = id;
+		this.balance = balance;
+		this.userId = userId;
+		this.tasktype = tasktype;
+		this.tasks = tasks;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Set<TaskType> getTasktype() {
+		return tasktype;
+	}
+
+	public void setTasktype(Set<TaskType> tasktype) {
+		this.tasktype = tasktype;
+	}
+
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
+	}
+
+	@Override
+	public String toString() {
+		return "Allowance{" +
+				"id=" + id +
+				", balance=" + balance +
+				", userId=" + userId +
+				", tasktype=" + tasktype +
+				", tasks=" + tasks +
+				'}';
 	}
 }

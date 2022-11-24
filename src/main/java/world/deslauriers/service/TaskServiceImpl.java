@@ -4,14 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
 import javax.validation.constraints.NotNull;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.AllArgsConstructor;
 import world.deslauriers.domain.Allowance;
 import world.deslauriers.domain.Cadence;
 import world.deslauriers.domain.Task;
@@ -19,7 +19,6 @@ import world.deslauriers.domain.TaskType;
 import world.deslauriers.domain.dto.TaskTypeCadenceDto;
 import world.deslauriers.repository.TaskRepository;
 
-@AllArgsConstructor
 @Singleton
 public class TaskServiceImpl implements TaskService {
 	
@@ -59,21 +58,20 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void createDailyTasks() {
 		
-		List<TaskTypeCadenceDto> daily= 
+		var daily=
 				taskTypeService.findByCadence(Cadence.DAILY.getCadence());
 		
-		for(TaskTypeCadenceDto ttc: daily) {
+		for(var ttc: daily) {
 			
-			Task t = new Task();
+			var t = new Task();
 			t.setDate(LocalDate.now());
 			t.setIsComplete(false);
 			t.setIsQuality(true);
 			
-			Optional<TaskType> tt = taskTypeService.findById(ttc.getTasktypeId());
-			t.setTasktype(tt.get());
+			var tt = taskTypeService.findById(ttc.tasktypeId());
 			
-			Optional<Allowance> a = allowanceService.findById(ttc.getAllowanceId());
-			t.setAllowance(a.get());
+			var a = allowanceService.findById(ttc.allowanceId());
+
 			
 			taskDao.save(t);
 		}
